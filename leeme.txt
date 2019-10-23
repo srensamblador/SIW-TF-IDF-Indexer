@@ -1,0 +1,32 @@
+TF-IDF Indexador
+Samuel Cifuentes García - UO238524
+################################################33
+
+Estructura de ficheros:
+* inverse_file: estructuras de datos Inverse_File (representa el fichero invertido), Term (una entrada de dicho fichero),
+    Document (una entrada de la post_lista de cada término)
+* serializer.py: serializa/carga el fichero invertido a/desde un fichero en disco
+* indexer.py: punto de entrada para indexar una colección de documentos. Modo de uso:
+    python -m indexer.py input_file -o output_file
+   Lee la colección de documentos pasada como input y vuelca el fichero invertido al pasado como output
+* inverse_file_loader.py: punto de entrada para cargar un fichero invertido desde disco, de momento lo que hace es cargarlo
+    e imprimirlo por pantalla, representando como se accede a toda la información. Modo de uso:
+    python -m inverse_file_loader.py archivo.json
+
+Decisiones notables:
+* El fichero invertido se serializa en un json de esta forma
+    "terms": [
+        { "term": x
+           "idf": x
+           "post_list": [
+            { "doc_id": x,
+                "tf": x
+            }, ...
+           ]
+        }, ...
+    ]
+* En la extracción de términos, se tokenizan con nltk, se pasan a minúscula, se eliminan símbolos de puntuación,
+ se estemizan, se eliminan palabras vacías
+* El TF se normaliza mediante la fórmula frecuencia en el documento / número de palabras en el documento
+* Para evitar divisiones entre cero en el IDF (por ej, que un término no aparezca en ningún documento) se emplea la fórmula
+equivalente IDF = - log(número de documentos en los que aparece el término / total de documentos)
